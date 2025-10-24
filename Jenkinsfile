@@ -205,6 +205,20 @@ pipeline {
       }
     }
 
+        stage('Registering build DEV artifact') {
+            steps {
+                echo 'Registering the metadata'
+                registerBuildArtifactMetadata(
+                    name: "verizon-poc-app",
+                    url: "http://localhost:1111",
+                    version: "1.1.${env.BUILD_NUMBER}",
+                    digest: "c36a82d0ecc29d54b2e8edb291e1fceb",
+                    label: "dev",
+                    type: "docker"
+                )
+            }
+        }    
+
     stage('Test') {
       agent { label 'default' }
       steps {
@@ -220,6 +234,21 @@ pipeline {
         }
       }
     }
+
+        stage('Registering build QA artifact') {
+            steps {
+                echo 'Registering the metadata'
+                registerBuildArtifactMetadata(
+                    name: "verizon-poc-app",
+                    url: "http://localhost:1111",
+                    version: "1.1.${env.BUILD_NUMBER}",
+                    digest: "118ea58ed34e4a64ab399a3785be73f6",
+                    label: "qa",
+                    type: "docker"
+                )
+            }
+        }
+    
 stage('Prod') {
   agent any
   when { beforeAgent true; branch 'main' }
@@ -234,6 +263,20 @@ stage('Prod') {
     archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/prod-deploy.txt'
   }
 }
+        stage('Registering build Prod artifact') {
+            steps {
+                echo 'Registering the metadata'
+                registerBuildArtifactMetadata(
+                    name: "verizon-poc-app",
+                    url: "http://localhost:1111",
+                    version: "1.1.${env.BUILD_NUMBER}",
+                    digest: "6c7e94d0208c135e34260e138733f0d5",
+                    label: "prod",
+                    type: "docker"
+                )
+            }
+        }
+    
 
   } // stages
   
